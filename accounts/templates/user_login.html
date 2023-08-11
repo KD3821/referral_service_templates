@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load rest_framework %}
+
+{% block title %} Войти в ЛК {% endblock %}
+
+{% block content %}
+
+ <div class="container">
+    <div class="card col-6 mx-auto text-center">
+        <div class="card-header">Войти в личный кабинет:</div>
+        <div class="card-body">
+            <div class="my_card">
+                <div class="loader mb-3">
+                    <div id="data-box" class="text-center error">{{ error }}</div>
+                </div>
+                <form class="form-login" method="POST" action="{% url 'accounts:code' %}" >
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        {% render_form serializer %}
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Save">Получить код</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

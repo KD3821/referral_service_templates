@@ -1,0 +1,96 @@
+{% load static %}
+{% load rest_framework %}
+
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device_width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static '/css/style.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: lightsteelblue;">
+                    <div class="container-fluid">
+                        {% if user.is_authenticated %}
+                            <a class="navbar-brand" href="{% url 'accounts:user_home' user.phone %}" id="brand">Реферальная система</a>
+                        {% else %}
+                            <a class="navbar-brand" href="{% url 'accounts:login' %}" id="brand">Реферальная система</a>
+                        {% endif %}
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                {% if user.is_authenticated %}
+                                <li class="nav-item ">
+                                    {% if user.is_invited %}
+                                        <span class="nav-link">Вы приглашены по коду: {{ user.invitecode }}</span>
+                                    {% else %}
+                                        <form class="d-flex" method="POST" action="{% url 'service:invite' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="phone" value="{{ user.phone }}">
+                                            <div>
+                                                {% render_form serializer %}
+                                            </div>
+                                            <button class="btn btn-outline-secondary" type="submit">Сохранить</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link" href="{% url 'schema-swagger-ui' %}" target="_blank">Swagger</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link" href="{% url 'schema-redoc' %}" target="_blank">ReDoc</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'accounts:login' %}">Выход</a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'accounts:login' %}">Вход</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                {% if user.is_authenticated %}
+                <div class="col-md-3 offset-md-9">
+                    <strong>Вы вошли как:   <span style="color: green;">{{ user.phone }}</span></strong><br>
+                    <strong>Ваш инвайт-код:   <span style="color: green;">{{ user.referralcode }}</span></strong><br>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-4 mx-auto my-3">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+
+{% block title %} Личный кабинет {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-10 mx-auto mb-3">
+        <h4>Ваши рефералы:</h4>
+        <div class="referals">
+            {% if invited_users %}
+                <table class="ref_table">
+                    <tr>
+                        <th>Телефон</th>
+                        <th>Дата регистрации</th>
+                    </tr>
+                    {% for obj in invited_users %}
+                        <tr><td>{{ obj.phone }}</td><td>{{ obj.created_at }}</td></tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div>Вы пока никого не пригласили...</div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

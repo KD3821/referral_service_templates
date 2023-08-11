@@ -1,0 +1,24 @@
+.my_card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.non-visible {
+    display: none;
+}
+.loader {
+    height: 15px;
+}
+.error {
+    color: red;
+}
+.referals {
+    text-align: center;
+}
+.ref_table {
+    margin-top: 10%;
+    width: 80%;
+}
+tr td {
+    border: 1px solid green;
+}
