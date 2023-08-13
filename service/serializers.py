@@ -22,7 +22,7 @@ class InviteCodeSerializer(serializers.Serializer):
 
         inviter = User.objects.filter(referralcode=invitecode)[:1].get()
 
-        inviter.is_verified = True
+        inviter.is_inviter = True
         inviter.save()
 
         return inviter
